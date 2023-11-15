@@ -14,7 +14,6 @@ size_t _strlen(const char *s)
 
     return len;
 }
-
 /**
  * _strcmp - This is the custom implementation of strcmp
  * @s1: First string

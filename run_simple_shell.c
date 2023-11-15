@@ -3,15 +3,12 @@
 
 char *buffer = NULL;
 
-void exit_shell(void);
+int is_absolute_path(const char *path);
 
 int run_simple_shell(void)
 {
     ssize_t characters;
-    char *path;
     size_t len = 0;
-
-    path = getenv("PATH");
     signal(SIGINT, SIG_IGN);
 
     while (1)
@@ -42,10 +39,13 @@ int run_simple_shell(void)
                 free(args);
                 exit_shell();
             }
-
-            if (!is_absolute_path(args[0]))
+            else if (_strcmp(args[0], "env") == 0)
             {
-                char *full_path = search_path(args[0], path);
+                print_environment();
+            }
+            else if (!is_absolute_path(args[0]))
+            {
+                char *full_path = search_path(args[0], getenv("PATH"));
 
                 if (full_path != NULL)
                 {
