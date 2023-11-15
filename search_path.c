@@ -2,10 +2,9 @@
 #include <stdlib.h>
 
 /**
- * search_path - Search for the command in the PATH directories
- * @command: The command to search for
- * @path: The PATH environment variable
- *
+ * search_path - This searchs for the command in the PATH directories
+ * @command: This is the command to search for
+ * @path: This is the PATH environment variable
  * Return: Full path to the command if found, NULL otherwise
  */
 char *search_path(char *command, char *path)
@@ -14,7 +13,6 @@ char *search_path(char *command, char *path)
     char *path_copy = NULL;
     size_t path_len, token_len, full_path_len, i, j;
 
-    /* Duplicate path using allowed functions */
     path_len = _strlen(path);
 
     path_copy = malloc(path_len + 1);
@@ -32,12 +30,10 @@ char *search_path(char *command, char *path)
 
     while (*token != '\0')
     {
-        /* Find the length of the current token */
         token_len = 0;
         while (token[token_len] != '\0' && token[token_len] != ':' && token[token_len] != '\n')
             token_len++;
 
-        /* Allocate memory for full_path using allowed functions */
         full_path_len = token_len + _strlen(command) + 2;
         full_path = malloc(full_path_len);
         if (full_path == NULL)
@@ -46,7 +42,6 @@ char *search_path(char *command, char *path)
             _exit(EXIT_FAILURE);
         }
 
-        /* Construct full path using allowed functions */
         for (i = 0; i < token_len; i++)
             full_path[i] = token[i];
 
@@ -58,7 +53,6 @@ char *search_path(char *command, char *path)
 
         full_path[i] = '\0';
 
-        /* Check if the constructed path is executable using allowed functions */
         if (access(full_path, F_OK | X_OK) == 0)
         {
             free(path_copy);
@@ -67,7 +61,6 @@ char *search_path(char *command, char *path)
 
         free(full_path);
 
-        /* Move to the next token */
         token += token_len;
         if (*token == ':' || *token == '\n')
             token++;

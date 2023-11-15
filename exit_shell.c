@@ -2,11 +2,12 @@
 #include <stdlib.h>
 
 /**
- * exit_shell - Exits the shell
+ * exit_shell - This function exits the shell
+ * Return: This returns void
  */
 void exit_shell(void)
 {
-    free(buffer); // Assuming buffer is a global variable
+    free(buffer);
     exit(EXIT_SUCCESS);
 }
 

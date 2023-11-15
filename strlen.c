@@ -1,10 +1,9 @@
 #include "shell.h"
 
 /**
- * _strlen - Custom implementation of strlen
- * @s: Input string
- *
- * Return: Length of the string
+ * _strlen - This is the custom implementation of strlen
+ * @s: This is an input string
+ * Return: This returns length of the string
  */
 size_t _strlen(const char *s)
 {
@@ -17,11 +16,11 @@ size_t _strlen(const char *s)
 }
 
 /**
- * _strcmp - Custom implementation of strcmp
+ * _strcmp - This is the custom implementation of strcmp
  * @s1: First string
  * @s2: Second string
- *
- * Return: 0 if strings are equal, positive if s1 > s2, negative if s1 < s2
+ * Return: This returns 0 if strings are equal, 
+ * positive if s1 > s2, negative if s1 < s2
  */
 int _strcmp(const char *s1, const char *s2)
 {

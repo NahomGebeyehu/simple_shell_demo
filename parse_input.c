@@ -1,13 +1,11 @@
-/* parse_input.c */
 #include "shell.h"
 #include <stdlib.h>
-#include <string.h>  /* Add this line for the strtok function */
+#include <string.h>
 
 /**
  * parse_input - Tokenizes input into an array of strings
  * @input: User input
- *
- * Return: Array of strings
+ * Return: This return an array of strings
  */
 char **parse_input(char *input)
 {
@@ -28,6 +26,6 @@ char **parse_input(char *input)
         tokens[i++] = token;
         token = strtok(NULL, " \t\n");
     }
-    tokens[i] = NULL; /* Null-terminate the array */
-    return tokens;
+    tokens[i] = NULL;
+    return (tokens);
 }

@@ -1,4 +1,3 @@
-/* run_simple_shell.c */
 #include "shell.h"
 #include <stdlib.h>
 
@@ -13,7 +12,6 @@ int run_simple_shell(void)
     size_t len = 0;
 
     path = getenv("PATH");
-
     signal(SIGINT, SIG_IGN);
 
     while (1)
@@ -33,9 +31,9 @@ int run_simple_shell(void)
             exit_shell();
         }
 
-        buffer[characters - 1] = '\0'; /* Remove newline character */
+        buffer[characters - 1] = '\0';
 
-        if (characters > 1) /* Ignore empty lines */
+        if (characters > 1)
         {
             args = parse_input(buffer);
 
@@ -70,7 +68,6 @@ int run_simple_shell(void)
             }
             else if (child_pid == 0)
             {
-                /* Child process */
                 if (execve(args[0], args, NULL) == -1)
                 {
                     perror("Execution error");
@@ -79,7 +76,6 @@ int run_simple_shell(void)
             }
             else
             {
-                /* Parent process */
                 waitpid(child_pid, &status, 0);
             }
 
