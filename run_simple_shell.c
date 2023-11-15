@@ -1,30 +1,16 @@
+/* run_simple_shell.c */
 #include "shell.h"
 #include <stdlib.h>
 
-/**
- * is_absolute_path - Check if the given path is absolute
- * @path: The path to check
- *
- * Return: 1 if the path is absolute, 0 otherwise
- */
-int is_absolute_path(const char *path)
-{
-    return path[0] == '/';
-}
+char *buffer = NULL;
 
-/**
- * run_simple_shell - Simple Shell
- *
- * Return: Always 0 on success
- */
+void exit_shell(void);
+
 int run_simple_shell(void)
 {
-    char *buffer = NULL;
-    size_t bufsize = 0;
     ssize_t characters;
-    pid_t child_pid;
-    int status;
     char *path;
+    size_t len = 0;
 
     path = getenv("PATH");
 
@@ -32,85 +18,87 @@ int run_simple_shell(void)
 
     while (1)
     {
+        char **args;
+        pid_t child_pid;
+        int status;
+
         write(STDOUT_FILENO, ":) ", 3);
-        characters = getline(&buffer, &bufsize, stdin);
+        characters = getline(&buffer, &len, stdin);
+
         if (characters == -1)
         {
             if (isatty(STDIN_FILENO))
                 write(STDOUT_FILENO, "\n", 1);
             free(buffer);
-            exit(EXIT_SUCCESS);
+            exit_shell();
         }
 
         buffer[characters - 1] = '\0'; /* Remove newline character */
 
         if (characters > 1) /* Ignore empty lines */
         {
-            char **args = parse_input(buffer);
+            args = parse_input(buffer);
 
-            if (is_absolute_path(args[0]) || access(args[0], F_OK | X_OK) == 0)
+            if (_strcmp(args[0], "exit") == 0)
             {
-                child_pid = fork();
-                if (child_pid == -1)
-                {
-                    perror("Error forking");
-                }
-                else if (child_pid == 0)
-                {
-                    /* Child process */
-                    if (execve(args[0], args, NULL) == -1)
-                    {
-                        perror("Execution error");
-                        _exit(EXIT_FAILURE);
-                    }
-                }
-                else
-                {
-                    /* Parent process */
-                    waitpid(child_pid, &status, 0);
-                }
+                free(args);
+                exit_shell();
             }
-            else
+
+            if (!is_absolute_path(args[0]))
             {
                 char *full_path = search_path(args[0], path);
 
                 if (full_path != NULL)
                 {
-                    child_pid = fork();
-                    if (child_pid == -1)
-                    {
-                        perror("Error forking");
-                    }
-                    else if (child_pid == 0)
-                    {
-                        /* Child process */
-                        if (execve(full_path, args, NULL) == -1)
-                        {
-                            perror("Execution error");
-                            _exit(EXIT_FAILURE);
-                        }
-                    }
-                    else
-                    {
-                        /* Parent process */
-                        waitpid(child_pid, &status, 0);
-                    }
-
-                    free(full_path);
+                    args[0] = full_path;
                 }
                 else
                 {
                     write(STDERR_FILENO, "sh: 1: ", 6);
                     write(STDERR_FILENO, args[0], _strlen(args[0]));
                     write(STDERR_FILENO, ": not found\n", 12);
+                    free(args);
+                    continue;
                 }
+            }
+
+            child_pid = fork();
+            if (child_pid == -1)
+            {
+                perror("Error forking");
+            }
+            else if (child_pid == 0)
+            {
+                /* Child process */
+                if (execve(args[0], args, NULL) == -1)
+                {
+                    perror("Execution error");
+                    _exit(EXIT_FAILURE);
+                }
+            }
+            else
+            {
+                /* Parent process */
+                waitpid(child_pid, &status, 0);
             }
 
             free(args);
         }
     }
 
-    free(buffer);
     return 0;
 }
 
+void exit_shell(void)
+{
+    free(buffer);
+    exit(EXIT_SUCCESS);
+}
+
+
+
+int is_absolute_path(const char *path)
+{
+    return path[0] == '/';
+}

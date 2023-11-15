@@ -1,17 +1,16 @@
 #include "shell.h"
 #include <stdlib.h>
 
-/* Custom function to replace strlen */
-
 /**
  * search_path - Search for the command in the PATH directories
  * @command: The command to search for
  * @path: The PATH environment variable
+ *
+ * Return: Full path to the command if found, NULL otherwise
  */
 char *search_path(char *command, char *path)
 {
     char *token, *full_path;
-    /*char *delimiters = ":\n";*/
     char *path_copy = NULL;
     size_t path_len, token_len, full_path_len, i, j;
 
@@ -77,4 +76,3 @@ char *search_path(char *command, char *path)
     free(path_copy);
     return NULL;
 }
-

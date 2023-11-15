@@ -11,9 +11,12 @@
 #define MAX_INPUT 1024
 
 /* Function prototypes */
+size_t _strlen(const char *s);
+int _strcmp(const char *s1, const char *s2);
 char **parse_input(char *input);
 char *search_path(char *command, char *path);
 int run_simple_shell(void);
-size_t _strlen(char *s);
-#endif /* SHELL_H */
+void exit_shell(void);
+int is_absolute_path(const char *path);
 
+#endif /* SHELL_H */
